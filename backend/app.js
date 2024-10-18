@@ -17,10 +17,8 @@ const initializeDBAndServer=async()=>{
             filename:dbPath,
             driver:sqlite3.Database,
         });
-        app.listen(3000,async()=>{
-            console.log('Server is running on port 3000');
-            const jokes=await getJokes();
-            console.log(jokes);
+        app.listen(5000,async()=>{
+            console.log('Server is running on port 5000');
         });
     }catch(e){
         console.log(`DB Error ${e.message}`);
@@ -30,7 +28,12 @@ const initializeDBAndServer=async()=>{
 initializeDBAndServer();
 
 const getJokes=async()=>{
-    const getDBQuery=`SELECT * FROM jokes where setup is not null and delivery is not null limit 10`;
+    const getDBQuery=`SELECT * FROM jokes`;
     const jokes= await db.all(getDBQuery);
     return jokes;
 }
+
+app.get('/getjokes',async(req,res)=>{
+    const jokes=await getJokes();
+    res.send(jokes);
+})
